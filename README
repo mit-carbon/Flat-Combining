@@ -1,0 +1,9 @@
+You may find it convenient not to use VC++. You can make directly. Create links in the top-level to the appropriate Makefile and test benchmark scripts:
+
+# e.g. for intel 64-bit
+$ ln -s ./makefiles/Makefile_intel64 Makefile
+$ ln -s ./scripts/runtests.bash runtest.bash
+$ chmod u+x runtest.bash
+$ make
+$ ./runtest.bash
+
