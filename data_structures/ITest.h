@@ -138,14 +138,14 @@ protected:
 	};
 
 	//list fields -----------------------------------
-	static __thread__ SlotInfo*		_tls_slot_info;
+        CCP::ThreadLocal<SlotInfo*>	_tls_slot_info;
 	CCP::AtomicReference<SlotInfo>	_tail_slot;
 	int volatile					_timestamp;
 
 	//list helper function --------------------------
 	SlotInfo* get_new_slot() {
 		SlotInfo* my_slot= new SlotInfo();
-		_tls_slot_info = my_slot;
+		_tls_slot_info.set(my_slot);
 
 		SlotInfo* curr_tail;
 		do {

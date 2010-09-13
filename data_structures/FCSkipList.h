@@ -246,7 +246,7 @@ public://methods
 
 	//deq ......................................................
 	boolean add(final int iThread, final int inValue) {
-		SlotInfo* my_slot = _tls_slot_info;
+                SlotInfo* my_slot = _tls_slot_info.get();
 		if(null == my_slot)
 			my_slot = get_new_slot();
 
@@ -280,7 +280,7 @@ public://methods
 
 	//deq ......................................................
 	int remove(final int iThread, final int inValue) {
-		SlotInfo* my_slot = _tls_slot_info;
+                SlotInfo* my_slot = _tls_slot_info.get();
 		if(null == my_slot)
 			my_slot = get_new_slot();
 

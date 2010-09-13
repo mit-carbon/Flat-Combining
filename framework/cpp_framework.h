@@ -436,12 +436,15 @@ namespace CCP {
 			pthread_key_delete(_key_handle);
 		}
 
-		virtual T initialValue() = 0; //called if not exits on thread
+                // JME: made this not a pure virtual function
+		virtual T initialValue() {
+                   return (T) null; 
+                }
 
 		T get() {
 			void* curr_key = pthread_getspecific(_key_handle);
 			if(0 == curr_key) {
-				pthread_setspecific(_key_handle, (void*)initialValue());
+				pthread_setspecific(_key_handle, (void*) initialValue());
 				curr_key = pthread_getspecific(_key_handle);
 			}
 			return (T)((ptr_t)curr_key);

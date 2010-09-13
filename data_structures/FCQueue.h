@@ -166,7 +166,7 @@ public:
 	boolean add(final int iThread, final int inValue) {
 		CasInfo& my_cas_info = _cas_info_ary[iThread];
 
-		SlotInfo* my_slot = _tls_slot_info;
+		SlotInfo* my_slot = _tls_slot_info.get();
 		if(null == my_slot)
 			my_slot = get_new_slot();
 
@@ -207,7 +207,7 @@ public:
 	int remove(final int iThread, final int inValue) {
 		CasInfo& my_cas_info = _cas_info_ary[iThread];
 
-		SlotInfo* my_slot = _tls_slot_info;
+		SlotInfo* my_slot = _tls_slot_info.get();
 		if(null == my_slot)
 			my_slot = get_new_slot();
 
