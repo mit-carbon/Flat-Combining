@@ -73,7 +73,7 @@ protected://Flat Combining fields
 	final int		_REP_THRESHOLD;
 	Node*			preds[_MAX_LEVEL + 1];
 	Node*			succs[_MAX_LEVEL + 1];
-	//SlotInfo*		_saved_remove_node[1024];
+	SlotInfo*		_saved_remove_node[1024];
 
 protected://methods
 	inline_ int randomLevel() {
@@ -134,6 +134,11 @@ protected://methods
 
 			while(null != curr_slot->_next) {
 
+			        if ( curr_slot->_deq_pending ) {
+				        curr_slot = curr_slot->_next;
+				        continue;
+			        }
+
 				final int inValue = curr_slot->_req_ans;
 				if(inValue > _NULL_VALUE) {
 					++num_changes;
@@ -169,13 +174,11 @@ protected://methods
 
 				} else if(_DEQ_VALUE == inValue) {
 					++num_changes;
-
+                                        curr_slot->_deq_pending = true;
 					//REMOVE ...................................................
-					//_saved_remove_node[num_removed] = curr_slot;
-					curr_slot->_req_ans = -5;
-					curr_slot->_time_stamp = _NULL_VALUE;
 
-					++num_removed;
+					_saved_remove_node[num_removed] = curr_slot;
+                                        ++num_removed;
 					curr_slot = curr_slot->_next;
 					continue;
 				} else {
@@ -195,6 +198,11 @@ protected://methods
 		for (int iRemove=0; iRemove<num_removed; ++iRemove) {
 
 			if ( _tail != remove_node ) {
+  			        SlotInfo* dequeuer = _saved_remove_node[iRemove];
+			        dequeuer->_req_ans = -remove_node->_key;
+			        dequeuer->_time_stamp = _NULL_VALUE;
+			        dequeuer->_deq_pending = false;
+
 				--(remove_node->_counter);
 				if(0 == remove_node->_counter) {
 					if(remove_node->_top_level > max_level) {
@@ -202,6 +210,13 @@ protected://methods
 					}
 					remove_node = remove_node->_next[0];
 				} 
+			}
+			else
+			{
+			         SlotInfo* dequeuer = _saved_remove_node[iRemove];
+				 dequeuer->_req_ans = _NULL_VALUE;
+				 dequeuer->_time_stamp = _NULL_VALUE;
+				 dequeuer->_deq_pending = false;
 			}
 		}
 

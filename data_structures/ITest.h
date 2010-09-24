@@ -127,13 +127,15 @@ protected:
 		int volatile		_req_ans;		//here 1 can post the request and wait for answer
 		int volatile		_time_stamp;	//when 0 not connected
 		SlotInfo* volatile	_next;			//when null not connected
-		void*				_custem_info;
+		void*			_custem_info;
+	        bool                    _deq_pending;
 
 		SlotInfo() {
-			_req_ans	 = _NULL_VALUE;
+			_req_ans     = _NULL_VALUE;
 			_time_stamp  = 0;
-			_next		 = null;
+			_next        = null;
 			_custem_info = null;
+                        _deq_pending = false;
 		}
 	};
 
